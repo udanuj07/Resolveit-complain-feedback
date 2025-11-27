@@ -80,3 +80,68 @@ ResolveIt is a Java-based application that enables users to register complaints,
 ---
 
 **Developed by Team QuantumEdge**
+
+## Prerequisites
+
+- Java JDK 11 or above
+- MySQL 5.7 or above
+- MySQL JDBC Driver (mysql-connector-java-8.0.x.jar)
+- IntelliJ IDEA or any Java IDE
+
+---
+
+## How to Run
+
+### Step 1: Database Setup
+
+1. Open MySQL Command Line or MySQL Workbench
+2. Create database and tables:
+
+```sql
+CREATE DATABASE resolve_it_db;
+USE resolve_it_db;
+
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE complaints (
+    complaint_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    status ENUM('Pending', 'In Progress', 'Resolved') DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+INSERT INTO users (username, password, role) VALUES ('admin', 'admin123', 'admin');
+INSERT INTO users (username, password, role) VALUES ('user1', 'user123', 'user');
+```
+
+### Step 2: Configure Database Connection
+
+Update `DB.java` with your MySQL credentials:
+```java
+private static final String DB_URL = "jdbc:mysql://localhost:3306/resolve_it_db";
+private static final String DB_USER = "root";
+private static final String DB_PASSWORD = "";
+```
+
+### Step 3: Add MySQL JDBC Driver
+
+Download mysql-connector-java-8.0.33.jar and add to project classpath.
+
+### Step 4: Run the Application
+
+1. Open `Main.java` in IntelliJ IDEA
+2. Click Run (or Shift + F10)
+3. Login with:
+   - Admin: username=admin, password=admin123
+   - User: username=user1, password=user123
+
+---
